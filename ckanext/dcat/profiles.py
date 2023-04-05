@@ -1694,13 +1694,7 @@ class SchemaOrgProfile(RDFProfile):
             self.g.add((subject, predicate, _type(value)))
 
     def _bind_namespaces(self):
-<<<<<<< HEAD
-        self.g.bind('schema', namespaces['schema'], replace=True)
-||||||| merged common ancestors
-        self.g.bind('schema', namespaces['schema'])
-=======
         self.g.namespace_manager.bind('schema', namespaces['schema'], replace=True)
->>>>>>> upstream/master
 
     def _basic_fields_graph(self, dataset_ref, dataset_dict):
         items = [
@@ -1782,19 +1776,10 @@ class SchemaOrgProfile(RDFProfile):
             self.g.add((publisher_details, RDF.type, SCHEMA.Organization))
             self.g.add((dataset_ref, SCHEMA.publisher, publisher_details))
 
-<<<<<<< HEAD
-            publisher_name = self._get_dataset_value(dataset_dict, 'publisher_name')
-            if not publisher_name and dataset_dict.get('organization'):
-||||||| merged common ancestors
-
-            publisher_name = self._get_dataset_value(dataset_dict, 'publisher_name')
-            if not publisher_name and dataset_dict.get('organization'):
-=======
             # In case no name and URI are available, again fall back to organization.
             # If no name but an URI is available, the name literal remains empty to
             # avoid mixing organization and dataset values.
             if not publisher_name and not publisher_uri and dataset_dict.get('organization'):
->>>>>>> upstream/master
                 publisher_name = dataset_dict['organization']['title']
             self.g.add((publisher_details, SCHEMA.name, Literal(publisher_name)))
 
