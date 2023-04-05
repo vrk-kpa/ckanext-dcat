@@ -31,27 +31,6 @@ def _sort_query_params(url):
     )
 
 
-def url_for(*args, **kwargs):
-
-    if not p.toolkit.check_ckan_version(min_version='2.9'):
-
-        external = kwargs.pop('_external', False)
-        if external is not None:
-            kwargs['qualified'] = external
-
-        if len(args) and args[0] == 'dcat.read_dataset':
-            return core_url_for('dcat_dataset', **kwargs)
-        elif len(args) and args[0] == 'dcat.read_catalog':
-            return core_url_for('dcat_catalog', **kwargs)
-        elif len(args) and args[0] == 'dataset.new':
-            return core_url_for(controller='package', action='new', **kwargs)
-        elif len(args) and args[0] == 'dataset.read':
-            return core_url_for(controller='package', action='read', **kwargs)
-
-
-    return core_url_for(*args, **kwargs)
-
-
 @pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index')
 class TestEndpoints():
 
