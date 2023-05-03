@@ -217,11 +217,11 @@ class SPARQLPlugin(p.SingletonPlugin):
 
     # IPackageController
 
-    def before_index(self, pkg_dict):
+    def before_dataset_index(self, pkg_dict):
         p.toolkit.enqueue_job(update_dataset_job, [pkg_dict], queue='priority')
         return pkg_dict
 
-    def after_delete(self, context, pkg_dict):
+    def after_dataset_delete(self, context, pkg_dict):
         try:
             self.sparql.remove_dataset(pkg_dict['id'])
         except Exception as e:
