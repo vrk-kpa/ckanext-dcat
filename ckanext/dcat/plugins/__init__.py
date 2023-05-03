@@ -188,7 +188,7 @@ def update_dataset_job(pkg_dict):
         log.error('Could not update dataset %s to SPARQL server: %s', pkg_dict['id'], e)
 
 
-class SPARQLPlugin(MixinSPARQLPlugin, p.SingletonPlugin):
+class SPARQLPlugin(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IPackageController, inherit=True)
