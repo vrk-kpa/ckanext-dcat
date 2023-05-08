@@ -27,6 +27,7 @@ from ckanext.dcat.logic import (dcat_dataset_show,
 from ckanext.dcat import utils, sparql
 import logging
 
+log = logging.getLogger(__name__)
 
 CUSTOM_ENDPOINT_CONFIG = 'ckanext.dcat.catalog_endpoint'
 TRANSLATE_KEYS_CONFIG = 'ckanext.dcat.translate_keys'
