@@ -218,9 +218,17 @@ class SPARQLPlugin(p.SingletonPlugin):
 
     # IPackageController
 
+    def before_index(self, pkg_dict):
+        '''CKAN <2.10 support'''
+        return self.before_dataset_index(pkg_dict)
+
     def before_dataset_index(self, pkg_dict):
         p.toolkit.enqueue_job(update_dataset_job, [pkg_dict], queue='priority')
         return pkg_dict
+
+    def after_index(self, pkg_dict):
+        '''CKAN <2.10 support'''
+        return self.after_dataset_index(pkg_dict)
 
     def after_dataset_delete(self, context, pkg_dict):
         try:
