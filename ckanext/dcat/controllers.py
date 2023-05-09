@@ -4,13 +4,7 @@ from ckan.plugins import toolkit
 import ckanext.dcat.utils as utils
 
 
-if toolkit.check_ckan_version(min_version='2.1'):
-    BaseController = toolkit.BaseController
-else:
-    from ckan.lib.base import BaseController
-
-
-class DCATController(BaseController):
+class DCATController(toolkit.BaseController):
 
     def read_catalog(self, _format=None):
         return utils.read_catalog_page(_format)
@@ -26,16 +20,3 @@ class DCATController(BaseController):
         toolkit.response.headers['Content-Length'] = len(content)
 
         return content
-
-
-class SPARQLController(BaseController):
-
-    def sparql_ui(self):
-        return utils.sparql_ui()
-
-    def sparql_query(self):
-        if toolkit.request.method == 'POST':
-            query = toolkit.request.form.get('query')
-        else:
-            query = toolkit.request.params.get('query')
-        return utils.sparql_query(query)

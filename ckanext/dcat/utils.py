@@ -15,13 +15,7 @@ import operator
 from ckantoolkit import config, h
 from ckanext.dcat.exceptions import RDFProfileException
 
-try:
-    # CKAN >= 2.6
-    from ckan.exceptions import HelperError
-except ImportError:
-    # CKAN < 2.6
-    class HelperError(Exception):
-        pass
+from ckan.exceptions import HelperError
 
 from ckan import model
 import ckan.plugins.toolkit as toolkit
@@ -30,14 +24,8 @@ import ckan.plugins.toolkit as toolkit
 accept_re = re.compile("^(?P<ct>[^;]+)[ \t]*(;[ \t]*q=(?P<q>[0-9.]+)){0,1}$")
 
 
-if toolkit.check_ckan_version(max_version='2.8.99'):
-    from ckan.controllers.package import PackageController
-    from ckan.controllers.home import HomeController
-    read_endpoint = PackageController().read
-    index_endpoint = HomeController().index
-else:
-    from ckan.views.home import index as index_endpoint
-    from ckan.views.dataset import read as read_endpoint
+from ckan.views.home import index as index_endpoint
+from ckan.views.dataset import read as read_endpoint
 
 _ = toolkit._
 
@@ -426,10 +414,7 @@ def read_dataset_page(_id, _format):
         _format = check_access_header()
 
     if not _format:
-        if toolkit.check_ckan_version(max_version='2.8.99'):
-            return read_endpoint(_id)
-        else:
-            return read_endpoint(_get_package_type(_id), _id)
+        return read_endpoint(_get_package_type(_id), _id)
 
     _profiles = toolkit.request.params.get('profiles')
     if _profiles:
@@ -443,12 +428,9 @@ def read_dataset_page(_id, _format):
     except (toolkit.ValidationError, RDFProfileException) as e:
         toolkit.abort(409, str(e))
 
-    if toolkit.check_ckan_version(max_version='2.8.99'):
-        toolkit.response.headers.update({'Content-type': CONTENT_TYPES[_format]})
-    else:
-        from flask import make_response
-        response = make_response(response)
-        response.headers['Content-type'] = CONTENT_TYPES[_format]
+    from flask import make_response
+    response = make_response(response)
+    response.headers['Content-type'] = CONTENT_TYPES[_format]
 
     return response
 
@@ -478,24 +460,17 @@ def read_catalog_page(_format):
     except (toolkit.ValidationError, RDFProfileException) as e:
         toolkit.abort(409, str(e))
 
-    if toolkit.check_ckan_version(max_version='2.8.99'):
-        toolkit.response.headers.update(
-            {'Content-type': CONTENT_TYPES[_format]})
-    else:
-        from flask import make_response
-        response = make_response(response)
-        response.headers['Content-type'] = CONTENT_TYPES[_format]
+    from flask import make_response
+    response = make_response(response)
+    response.headers['Content-type'] = CONTENT_TYPES[_format]
 
     return response
 
 
 def get_endpoint(_type='dataset'):
-    if toolkit.check_ckan_version(min_version='2.9'):
-        return 'dcat.read_dataset' if _type == 'dataset' else 'dcat.read_catalog'
-    else:
-        return 'dcat_dataset' if _type == 'dataset' else 'dcat_catalog'
+    return 'dcat.read_dataset' if _type == 'dataset' else 'dcat.read_catalog'
 
-
+    
 def sparql_ui():
     return toolkit.render('sparql/query.html')
 

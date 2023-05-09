@@ -79,10 +79,6 @@ These are implemented internally using:
 
         (pyenv) $ pip install -r ckanext-dcat/requirements.txt
 
-    > **Note**
-    >
-    > If you are running on Python 2.7 or 3.6 please use `requirements-py2-py36.txt` instead
-
 4.  Enable the required plugins in your ini file:
 
         ckan.plugins = dcat dcat_rdf_harvester dcat_json_harvester dcat_json_interface structured_data
@@ -126,7 +122,7 @@ RDF representations will be advertised using `<link rel="alternate">` tags on th
     <head>
 
         <link rel="alternate" type="application/rdf+xml" href="http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b.rdf"/>
-        <link rel="alternate" type="text/ttl" href="http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b.ttl"/>
+        <link rel="alternate" type="text/turtle" href="http://demo.ckan.org/dataset/34315559-2b08-44eb-a2e6-ebe9ce1a266b.ttl"/>
         <!-- ... -->
 
     </head>
@@ -153,7 +149,7 @@ This endpoint can be customized if necessary using the `ckanext.dcat.catalog_end
 
     ckanext.dcat.catalog_endpoint = /dcat/catalog/{_format}
 
-The custom endpoint **must** start with a backslash (`/`) and contain the `{_format}` placeholder.
+The custom endpoint **must** start with a forward slash (`/`) and contain the `{_format}` placeholder.
 
 As described previously, the extension will determine the RDF serialization format returned.
 
@@ -168,7 +164,7 @@ RDF representations will be advertised using `<link rel="alternate">` tags on th
 
         <link rel="alternate" type="application/rdf+xml" href="http://demo.ckan.org/catalog.rdf"/>
         <link rel="alternate" type="application/rdf+xml" href="http://demo.ckan.org/catalog.xml"/>
-        <link rel="alternate" type="text/ttl" href="http://demo.ckan.org/catalog.ttl"/>
+        <link rel="alternate" type="text/turtle" href="http://demo.ckan.org/catalog.ttl"/>
         <!-- ... -->
 
     </head>
@@ -278,12 +274,12 @@ The information contained in the harvested `dcat:Catalog` node will be stored as
 When serializing, your Catalog will expose the harvested Catalog using the `dct:hasPart` relation. This means that your catalog will have this structure:
 - `dcat:Catalog` (represents your current catalog)
   - `dcat:dataset` (1..n, the dataset created withing your catalog)
-  - `dct:hasPart` 
+  - `dct:hasPart`
      - `dcat:Catalog` (info of one of the harvested catalogs)
         - `dcat:dataset` (dataset in the harvested catalog)
-  - `dct:hasPart` 
+  - `dct:hasPart`
      - `dcat:Catalog` (info of one of another harvester catalog)
-     ...   
+     ...
 
 
 ### Extending the RDF harvester
@@ -379,6 +375,15 @@ This mapping is compatible with the [DCAT-AP v1.1](https://joinup.ec.europa.eu/a
 | dcat:Distribution | dcatap:availability    | resource:availability                     |                                | text      |                                                                                                                                                               |
 | dcat:Distribution | dcat:compressFormat    | resource:compress_format                  |                                | text      |                                                                                                                                                               |
 | dcat:Distribution | dcat:packageFormat     | resource:package_format                   |                                | text      |                                                                                                                                                               |
+| dcat:Distribution | dcat:accessService     | resource:access_services                  |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dct:title              | access_service:title                      |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dcat:endpointURL       | access_service:endpoint_url               |                                | list      |                                                                                                                                                               |
+| dcat:DataService  | dcat:endpointDescription| access_service:endpoint_description      |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dcatap:availability    | access_service:availability               |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dcat:servesDataset     | access_service:serves_dataset             |                                | list      |                                                                                                                                                               |
+| dcat:DataService  | dct:description        | access_service:description                |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dct:license            | access_service:license                    |                                | text      |                                                                                                                                                               |
+| dcat:DataService  | dct:accessRights       | access_service:access_rights              |                                | text      |                                                                                                                                                               |
 | spdx:Checksum     | spdx:checksumValue     | resource:hash                             |                                | text      |                                                                                                                                                               |
 | spdx:Checksum     | spdx:algorithm         | resource:hash_algorithm                   |                                | text      |                                                                                                                                                               |
 
@@ -391,7 +396,7 @@ This mapping is compatible with the [DCAT-AP v1.1](https://joinup.ec.europa.eu/a
     <?xml version="1.0" encoding="utf-8" ?>
         <rdf:RDF
          xmlns:dct="http://purl.org/dc/terms/"
-	     xmlns:dcat="http://www.w3.org/ns/dcat#"
+         xmlns:dcat="http://www.w3.org/ns/dcat#"
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
@@ -966,7 +971,7 @@ The plugin also provides a query interface based on [Yasgui](https://triply.cc/d
 To run the tests do:
 
     pytest --ckan-ini=test.ini ckanext/dcat/tests
-    
+
 ## Releases
 
 To create a new release, follow these steps:
@@ -986,7 +991,7 @@ Work on ckanext-dcat has been made possible by:
 If you can fund new developments or contribute please get in touch.
 
 
-## Copying and License 
+## Copying and License
 
 This material is copyright (c) Open Knowledge.
 
