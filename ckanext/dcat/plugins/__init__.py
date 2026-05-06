@@ -185,8 +185,8 @@ def update_dataset_job(pkg_dict):
                                      password=config.get('ckanext.dcat.sparql.password'))
         profiles = p.toolkit.aslist(config.get('ckanext.dcat.sparql.profiles', []))
         client.update_dataset(pkg_dict, profiles)
-    except Exception as e:
-        log.error('Could not update dataset %s to SPARQL server: %s', pkg_dict['id'], e)
+    except Exception:
+        log.error('Could not update dataset %s to SPARQL server' % pkg_dict['id'], exc_info=True)
 
 
 class SPARQLPlugin(p.SingletonPlugin):
@@ -233,8 +233,8 @@ class SPARQLPlugin(p.SingletonPlugin):
     def after_dataset_delete(self, context, pkg_dict):
         try:
             self.sparql.remove_dataset(pkg_dict['id'])
-        except Exception as e:
-            log.error('Could not remove dataset %s from SPARQL server: %s', pkg_dict['id'], e)
+        except Exception:
+            log.error('Could not remove dataset %s from SPARQL server:' % pkg_dict['id'], exc_info=True)
 
     # IActions
 
