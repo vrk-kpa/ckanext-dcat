@@ -233,8 +233,8 @@ class SPARQLPlugin(p.SingletonPlugin):
     def after_dataset_delete(self, context, pkg_dict):
         try:
             self.sparql.remove_dataset(pkg_dict['id'])
-        except Exception as e:
-            log.error('Could not remove dataset %s from SPARQL server: %s', pkg_dict['id'], e)
+        except Exception:
+            log.error('Could not remove dataset %s from SPARQL server:' % pkg_dict['id'], exc_info=True)
 
     # IActions
 
