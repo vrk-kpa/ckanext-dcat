@@ -357,8 +357,6 @@ class TestEndpoints:
 
         url = url_for("dcat.read_catalog", _format="ttl", fq="tags:economy")
 
-
-==== BASE ====
         response = app.get(url)
         content = response.body
         p = RDFParser()
@@ -430,8 +428,6 @@ class TestEndpoints:
         g = Graph()
         g.parse(data=content, format="xml")
 
-
-==== BASE ====
         pagination = [o for o in g.subjects(RDF.type, HYDRA.PagedCollection)][0]
 
         assert self._object_value(g, pagination, HYDRA.itemsPerPage) == "10"
