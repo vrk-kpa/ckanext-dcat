@@ -1,4 +1,3 @@
-from __future__ import division
 import math
 
 from ckantoolkit import config
@@ -149,7 +148,7 @@ def _pagination_info(query, data_dict):
         base_url = '%s%s' % (
             base_url, toolkit.request.path)
 
-        params = [p for p in toolkit.request.params.items()
+        params = [p for p in toolkit.request.args.items()
                   if p[0] != 'page' and p[0] in ('modified_since', 'profiles', 'q', 'fq')]
         if params:
             qs = '&'.join(

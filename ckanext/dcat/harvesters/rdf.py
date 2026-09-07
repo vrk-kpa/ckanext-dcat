@@ -1,10 +1,10 @@
-from builtins import str
-from past.builtins import basestring
 import json
 import uuid
 import logging
 import hashlib
 import traceback
+
+import sqlalchemy as sa
 
 import ckan.plugins as p
 import ckan.model as model
@@ -135,7 +135,7 @@ class DCATRDFHarvester(DCATHarvester):
         source_config_obj = json.loads(source_config)
         if 'rdf_format' in source_config_obj:
             rdf_format = source_config_obj['rdf_format']
-            if not isinstance(rdf_format, basestring):
+            if not isinstance(rdf_format, str):
                 raise ValueError('rdf_format must be a string')
             supported_formats = RDFParser().supported_formats()
             if rdf_format not in supported_formats:
@@ -279,7 +279,7 @@ class DCATRDFHarvester(DCATHarvester):
                                                                     harvest_object.guid))
             except p.toolkit.ObjectNotFound:
                 log.info('Package {0} already deleted.'.format(harvest_object.package_id))
-            
+
             return True
 
         if harvest_object.content is None:
@@ -394,7 +394,9 @@ class DCATRDFHarvester(DCATHarvester):
                         # Defer constraints and flush so the dataset can be indexed with
                         # the harvest object id (on the after_show hook from the harvester
                         # plugin)
-                        model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                        model.Session.execute(
+                            sa.text('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                        )
                         model.Session.flush()
 
                         p.toolkit.get_action('package_create')(context, dataset)

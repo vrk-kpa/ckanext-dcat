@@ -67,7 +67,9 @@ class DCATHarvester(HarvesterBase):
             did_get = False
             r = session.head(url)
 
-            if r.status_code == 405 or r.status_code == 400:
+            # Some servers respond with 400 or 404 to HEAD requests, even if the resource exists. 
+            # In that case we want to try a GET request before giving up.
+            if not r.ok: 
                 r = session.get(url, stream=True)
                 did_get = True
             r.raise_for_status()
@@ -159,13 +161,22 @@ class DCATHarvester(HarvesterBase):
         '''
         Returns a database result of datasets matching the given guid.
         '''
+        if toolkit.check_ckan_version(max_version="2.11.99"):
+            datasets = (
+                model.Session.query(model.Package.id)
+                .join(model.PackageExtra)
+                .filter(model.PackageExtra.key == "guid")
+                .filter(model.PackageExtra.value == guid)
+                .filter(model.Package.state == "active")
+                .all()
+            )
+        else:
+            datasets = (
+                model.Session.query(model.Package.id)
+                .filter(model.Package.extras["guid"] == f'"{guid}"')
+                .all()
+            )
 
-        datasets = model.Session.query(model.Package.id) \
-                                .join(model.PackageExtra) \
-                                .filter(model.PackageExtra.key == 'guid') \
-                                .filter(model.PackageExtra.value == guid) \
-                                .filter(model.Package.state == 'active') \
-                                .all()
         return datasets
 
     def _get_existing_dataset(self, guid):

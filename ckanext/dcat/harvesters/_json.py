@@ -1,4 +1,3 @@
-from builtins import str
 import json
 import logging
 from hashlib import sha1
@@ -6,6 +5,7 @@ import traceback
 import uuid
 
 import requests
+import sqlalchemy as sa
 
 from ckan import model
 from ckan import logic
@@ -275,7 +275,8 @@ class DCATJSONHarvester(DCATHarvester):
                 # the harvest object id (on the after_show hook from the harvester
                 # plugin)
                 model.Session.execute(
-                    'SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                    sa.text('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                )
                 model.Session.flush()
 
             elif status == 'change':
