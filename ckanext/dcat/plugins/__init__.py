@@ -205,6 +205,8 @@ class DCATPlugin(p.SingletonPlugin, DefaultTranslation):
                             continue
 
                     for item in value:
+                        if not isinstance(item, dict):
+                            continue
                         for key in item:
                             value = item[key]
                             if not isinstance(value, dict):
