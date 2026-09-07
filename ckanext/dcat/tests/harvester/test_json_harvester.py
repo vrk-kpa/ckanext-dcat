@@ -11,10 +11,10 @@ import ckan.tests.factories as factories
 
 from ckanext.dcat.harvesters._json import copy_across_resource_ids, DCATJSONHarvester
 
-from .test_harvester import FunctionalHarvestTest, harvest_setup, clean_queues  # noqa: F401
+from .test_harvester import FunctionalHarvestTest, clean_queues  # noqa: F401
 
 
-@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'harvest_setup', 'clean_queues')
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'clean_queues')
 @pytest.mark.ckan_config('ckan.plugins', 'dcat harvest dcat_json_harvester')
 class TestDCATJSONHarvestFunctional(FunctionalHarvestTest):
 
@@ -278,7 +278,7 @@ class TestCopyAcrossResourceIds(object):
         assert harvested_dataset['resources'][0].get('id') is None
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'harvest_setup', 'clean_queues')
+@pytest.mark.usefixtures('clean_db', 'clean_index', 'clean_queues')
 class TestImportStage(object):
 
     class MockHarvestObject(object):
